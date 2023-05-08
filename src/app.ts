@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import path from 'path'
 import connectToMongoDB from './db'
+import router from './routes/users'
 
 // import usersRouter from './routes/users'
 
@@ -11,6 +12,8 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
 app.use(express.static(path.join(__dirname, 'public')))
+
+app.use('/users', router)
 
 const PORT = process.env.PORT || 3000
 
