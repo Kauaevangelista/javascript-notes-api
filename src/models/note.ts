@@ -1,17 +1,26 @@
-import mongoose, { Schema } from "mongoose";
+import { Schema, model, Document, Types } from 'mongoose';
+import { UserAttributes } from './User';
 
-const noteSchema = new Schema({
-    title: String,
-    body: String,
-    created_at: { type: Date, default: Date.now },
+export interface NoteAttributes extends Document {
+  title: string;
+  body: string;
+  created_at: Date
+  updated_at: Date
+  author: UserAttributes | Types.ObjectId
+}
+
+
+const noteSchema = new Schema<NoteAttributes>({
+  title: { type: String, required: true },
+  body: { type: String, required: true },    created_at: { type: Date, default: Date.now },
     updated_at: { type: Date, default: Date.now },
     author: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Types.ObjectId,
         ref: 'User',
         required: true
       }
-  }, { timestamps: true })
+  })
 
-  const Note = mongoose.model('Note', noteSchema)
+  const Note = model<NoteAttributes>('Note', noteSchema)
 
-export { noteSchema, Note }
+export default Note

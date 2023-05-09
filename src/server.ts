@@ -16,6 +16,8 @@ app.use(router)
 
 const PORT = process.env.port || 3000
 
+app.use('/users', router)
+
 app.listen(PORT, async () => {
   await database()
 

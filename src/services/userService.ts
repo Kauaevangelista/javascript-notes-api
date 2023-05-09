@@ -1,4 +1,4 @@
-import User, { UserAttributes } from "../models/user";
+import User, { UserAttributes } from "../models/User";
 
 const userService = {
     findByEmail: async (email: string): Promise<UserAttributes | null> => {
@@ -8,7 +8,6 @@ const userService = {
 
       createUser: async (data: UserAttributes): Promise<UserAttributes> => {
         const user = new User(data);
-        console.log(user)
         await user.save()
         return user;
       }
