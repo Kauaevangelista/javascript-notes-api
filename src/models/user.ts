@@ -1,28 +1,62 @@
-import mongoose, { Schema } from "mongoose";
-import bcrypt from 'bcrypt'
+import { Schema, model, Document } from 'mongoose';
 
+import bcrypt from 'bcrypt';
 
-const userSchema = new mongoose.Schema({
-    name: String,
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    created_at: { type: Date, default: Date.now },
-    updated_at: { type: Date, default: Date.now }
-  });
+export interface UserAttributes extends Document {
 
-  userSchema.pre('save', function (next) {
-    if (this.isNew || this.isModified('password')) {
-        bcrypt.hash(this.password, 10,
-           (err: mongoose.CallbackError | undefined, hashedPassword: string) => {
-            if (err)
-             next(err);
-            else {
-             this.password = hashedPassword;
-             next();
-            }
-          });
-      } else {
+  name: string;
+  email: string;
+  password: string;
+  comparePassword: (password: string, callback: (err: Error | null, isMatch: boolean) => void) => void;
+}
+
+const userSchema = new Schema<UserAttributes>({
+
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true }
+});
+
+userSchema.pre<UserAttributes>('save', function(next) {
+
+  if (!this.isModified('password')) {
+
+    return next();
+  }
+  bcrypt.genSalt(10, (err, salt) => {
+
+    if (err) {
+
+      return next(err);
+    }
+    bcrypt.hash(this.password, salt, (err, hash) => {
+
+      if (err) {
+
+        return next(err);
       }
-  })
+      this.password = hash;
 
-  export default mongoose.model('User', userSchema)
+      next();
+
+    });
+  });
+});
+
+userSchema.methods.comparePassword = function(password: string, callback: (err: Error | null, isMatch: boolean) => 
+void) {
+  bcrypt.compare(password, this.password, (err, isMatch) => {
+
+    if (err) {
+
+      return callback(err, false);
+    }
+    callback(null, isMatch);
+
+  });
+};
+
+const User = model<UserAttributes>('User', userSchema);
+
+
+export default User;
