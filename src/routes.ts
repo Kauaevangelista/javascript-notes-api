@@ -14,8 +14,12 @@ router.post('/notes', ensureAuth, noteController.create)
 // @ts-ignore
 router.get('/notes', ensureAuth, noteController.getAllNotes)
 // @ts-ignore
+router.get('/notes/search', ensureAuth, noteController.searchNote)
+// @ts-ignore
 router.get('/notes/:id', ensureAuth, noteController.getNote)
 // @ts-ignore
 router.put('/notes/:id', ensureAuth, noteController.updateNote)
+// @ts-ignore
+router.delete('/notes/:id', ensureAuth, noteController.deleteNote)
 
 export default router

@@ -21,6 +21,8 @@ const noteSchema = new Schema<NoteAttributes>({
       }
   })
 
+  noteSchema.index({'title': 'text', 'body': 'text'})
+
   const Note = model<NoteAttributes>('Note', noteSchema)
 
 export default Note

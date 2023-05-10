@@ -69,6 +69,34 @@ const noteController = {
         }
     },
 
+    deleteNote: async (req: Request, res: Response) => {
+        const { id } = req.params
+        const user = req.user
+        try {
+            const note: any = await Note.findById(id)
+            if (isOwner(user, note)) {
+                await Note.deleteOne(note)
+                res.json({message: 'OK'}).status(204)
+            } else {
+                res.status(403).json({error: 'Permission denied'})
+            }
+        } catch (error) {
+            res.status(500).json({error: 'Problem to delete a note'})
+        }
+      },
+
+      searchNote: async (req: Request, res: Response) => {
+        const { query }: any = req.query
+        const user = req.user._id
+        try {
+            const notes = await Note
+             .find({author: user })
+             .find({title: {$regex: query, $options: 'i'}})
+             res.json(notes)
+        } catch (error) {
+            res.json({error}).status(500)
+        }
+      },
 }
 
 const isOwner = (user: UserAttributes, note: NoteAttributes) => {
