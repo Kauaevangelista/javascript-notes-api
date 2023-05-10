@@ -4,7 +4,7 @@ import { UserAttributes } from '../models/User'
 import jwtService from '../services/jwtService';
 
 const authController = {
-    register: async (req: Request, res: Response): Promise<void> => {
+    register: async (req: Request, res: Response) => {
         const userData: UserAttributes = req.body;
         try {
           const existingUser = await userService.findByEmail(userData.email);

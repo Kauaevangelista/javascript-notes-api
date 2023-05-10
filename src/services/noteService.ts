@@ -1,6 +1,7 @@
 import { Types } from 'mongoose';
 import Note, { NoteAttributes } from '../models/Note'
 import { UserAttributes } from '../models/User';
+import noteController from '../controllers/noteController';
 
 const noteService = {
     createNote: async (data: NoteAttributes, author: Types.ObjectId): Promise<NoteAttributes> => {
@@ -26,7 +27,7 @@ const noteService = {
         } catch (error) {
           console.log(error)
         }
-      }
+      },
 
     }
 

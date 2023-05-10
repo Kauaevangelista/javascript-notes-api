@@ -5,7 +5,7 @@ import { UserAttributes } from '../models/User';
 
 
 const noteController = {
-    create: async (req: Request, res: Response): Promise<void> => {
+    create: async (req: Request, res: Response) => {
         const noteData: NoteAttributes = req.body
         const author = req.user!._id;
         try {
@@ -45,7 +45,29 @@ const noteController = {
         } catch (error) {
             res.json({error: error}).status(500)
         }
-    }
+    },
+
+    updateNote: async (req: Request, res: Response) => {
+        const { title, body } = req.body
+        const { id } = req.params
+        const user = req.user
+
+        try {
+            const note: any = await Note.findById(id)
+            if (isOwner(user, note)) {
+                const noteUpdated = await Note.findOneAndUpdate(
+                    {_id: id},
+                    { $set: { title: title, body: body}},
+                    { upsert: true, 'new': true }
+                )
+                res.json(noteUpdated)
+            } else {
+                res.status(403).json({error: 'Permission denied'})
+            }
+        } catch (error) {
+            res.status(500).json({error: 'Problem to update a note'})
+        }
+    },
 
 }
 

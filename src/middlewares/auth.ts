@@ -5,7 +5,7 @@ import jwtService from '../services/jwtService'
 import userService from '../services/userService'
 
 export interface AuthenticatedRequest extends Request {
-  user?: UserAttributes | null
+  user: UserAttributes | null
 }
 
 export function ensureAuth(req: AuthenticatedRequest, res: Response, next: NextFunction) {
