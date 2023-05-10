@@ -11,4 +11,8 @@ router.post('/login', authController.login)
 
 router.post('/notes', ensureAuth, noteController.create)
 
+router.get('/notes', ensureAuth, noteController.getAllNotes)
+
+router.get('/notes/:id', ensureAuth, noteController.getNote)
+
 export default router
